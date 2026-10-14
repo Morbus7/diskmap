@@ -1,0 +1,24 @@
+scan:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: diskmap
+get_tree:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: diskmap
+    path:
+      example: "volume1/photo"
+      selector:
+        text:
+    depth:
+      default: 2
+      selector:
+        number:
+          min: 0
+          max: 10
+          mode: box

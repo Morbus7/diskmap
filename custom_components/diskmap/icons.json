@@ -1,0 +1,6 @@
+{
+  "services": {
+    "scan": { "service": "mdi:magnify-scan" },
+    "get_tree": { "service": "mdi:file-tree" }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "domain": "diskmap",
+  "name": "Diskmap",
+  "codeowners": ["@Morbus7"],
+  "config_flow": true,
+  "dependencies": ["websocket_api"],
+  "documentation": "https://github.com/Morbus7/diskmap",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/Morbus7/diskmap/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}

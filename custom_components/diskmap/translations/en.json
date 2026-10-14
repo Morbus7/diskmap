@@ -1,0 +1,148 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add Diskmap agent",
+        "description": "Address of a machine running diskmap-agent.",
+        "data": {
+          "name": "Name",
+          "host": "Host",
+          "port": "Port",
+          "token": "Token (API_TOKEN)"
+        },
+        "data_description": {
+          "name": "Shown in Home Assistant (default: the agent's name)",
+          "host": "IP address or hostname"
+        }
+      },
+      "reconfigure": {
+        "title": "Change agent",
+        "description": "Leave the token empty to keep the current one.",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "token": "Token (API_TOKEN)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "New token",
+        "description": "The agent {name} no longer accepts the token.",
+        "data": {
+          "token": "Token (API_TOKEN)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to the agent",
+      "invalid_auth": "The agent does not accept the token"
+    },
+    "abort": {
+      "already_configured": "This agent is already added",
+      "reconfigure_successful": "Changed",
+      "reauth_successful": "Changed"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Diskmap options",
+        "data": {
+          "scan_interval": "Update interval",
+          "top_sensors": "Top folders as sensors"
+        },
+        "data_description": {
+          "scan_interval": "How often Home Assistant asks the agent for a summary",
+          "top_sensors": "Number of top folders per root that become sensors"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "used": {
+        "name": "Used"
+      },
+      "used_root": {
+        "name": "{root} used"
+      },
+      "free": {
+        "name": "Free"
+      },
+      "free_root": {
+        "name": "{root} free"
+      },
+      "total": {
+        "name": "Total"
+      },
+      "total_root": {
+        "name": "{root} total"
+      },
+      "used_percent": {
+        "name": "Used percentage"
+      },
+      "used_percent_root": {
+        "name": "{root} used percentage"
+      },
+      "hidden": {
+        "name": "Not visible"
+      },
+      "hidden_root": {
+        "name": "{root} not visible"
+      },
+      "last_scan": {
+        "name": "Last scan"
+      }
+    },
+    "binary_sensor": {
+      "scanning": {
+        "name": "Scanning"
+      }
+    },
+    "button": {
+      "scan_now": {
+        "name": "Scan now"
+      }
+    }
+  },
+  "services": {
+    "scan": {
+      "name": "Scan",
+      "description": "Starts a new scan on one or all agents.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Agent",
+          "description": "Leave empty for all agents."
+        }
+      }
+    },
+    "get_tree": {
+      "name": "Get tree",
+      "description": "Returns part of the folder tree from the last scan.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Agent",
+          "description": "The agent to read from."
+        },
+        "path": {
+          "name": "Path",
+          "description": "Folders separated by /, starting with the root name. Empty = everything."
+        },
+        "depth": {
+          "name": "Depth",
+          "description": "Number of levels below the path."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "not_loaded": {
+      "message": "Diskmap agent {entry} is not loaded"
+    },
+    "no_scan": {
+      "message": "No scan is available yet"
+    },
+    "no_path": {
+      "message": "The path {path} was not found in the last scan"
+    }
+  }
+}

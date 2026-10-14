@@ -1,0 +1,148 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Legg til Diskmap-agent",
+        "description": "Adressen til en maskin som kjører diskmap-agent.",
+        "data": {
+          "name": "Navn",
+          "host": "Adresse",
+          "port": "Port",
+          "token": "Token (API_TOKEN)"
+        },
+        "data_description": {
+          "name": "Vises i Home Assistant (standard: agentens navn)",
+          "host": "IP-adresse eller vertsnavn"
+        }
+      },
+      "reconfigure": {
+        "title": "Endre agent",
+        "description": "La tokenet stå tomt for å beholde det du har.",
+        "data": {
+          "host": "Adresse",
+          "port": "Port",
+          "token": "Token (API_TOKEN)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Nytt token",
+        "description": "Agenten {name} godtar ikke lenger tokenet.",
+        "data": {
+          "token": "Token (API_TOKEN)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Får ikke kontakt med agenten",
+      "invalid_auth": "Agenten godtar ikke tokenet"
+    },
+    "abort": {
+      "already_configured": "Denne agenten er lagt til allerede",
+      "reconfigure_successful": "Endret",
+      "reauth_successful": "Endret"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Valg for Diskmap",
+        "data": {
+          "scan_interval": "Oppdateringsintervall",
+          "top_sensors": "Toppmapper som sensorer"
+        },
+        "data_description": {
+          "scan_interval": "Hvor ofte Home Assistant henter oppsummeringen fra agenten",
+          "top_sensors": "Antall toppmapper per rot som blir sensorer"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "used": {
+        "name": "Brukt"
+      },
+      "used_root": {
+        "name": "{root} brukt"
+      },
+      "free": {
+        "name": "Ledig"
+      },
+      "free_root": {
+        "name": "{root} ledig"
+      },
+      "total": {
+        "name": "Total"
+      },
+      "total_root": {
+        "name": "{root} total"
+      },
+      "used_percent": {
+        "name": "Brukt prosent"
+      },
+      "used_percent_root": {
+        "name": "{root} brukt prosent"
+      },
+      "hidden": {
+        "name": "Ikke synlig"
+      },
+      "hidden_root": {
+        "name": "{root} ikke synlig"
+      },
+      "last_scan": {
+        "name": "Sist skannet"
+      }
+    },
+    "binary_sensor": {
+      "scanning": {
+        "name": "Skanner"
+      }
+    },
+    "button": {
+      "scan_now": {
+        "name": "Skann nå"
+      }
+    }
+  },
+  "services": {
+    "scan": {
+      "name": "Skann",
+      "description": "Starter en ny skanning på én eller alle agenter.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Agent",
+          "description": "Tom = alle agentene."
+        }
+      }
+    },
+    "get_tree": {
+      "name": "Hent tre",
+      "description": "Gir en del av mappetreet fra siste skanning.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Agent",
+          "description": "Agenten det skal leses fra."
+        },
+        "path": {
+          "name": "Sti",
+          "description": "Mapper skilt med /, start med rotnavnet. Tom = alt."
+        },
+        "depth": {
+          "name": "Dybde",
+          "description": "Antall nivåer under stien."
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "not_loaded": {
+      "message": "Diskmap-agenten {entry} er ikke lastet"
+    },
+    "no_scan": {
+      "message": "Det finnes ingen skanning ennå"
+    },
+    "no_path": {
+      "message": "Fant ikke {path} i siste skanning"
+    }
+  }
+}
