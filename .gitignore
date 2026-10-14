@@ -1,0 +1,5 @@
+# Hemmeligheter – skal aldri inn i git
+.env
+*token*
+*.key
+__pycache__/

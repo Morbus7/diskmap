@@ -1,0 +1,34 @@
+# Diskmap-agent på xubu (Portainer → Stacks → Add stack → Web editor, lim inn denne filen).
+# Tokenet legges inn under «Environment variables» i Portainer (navn API_TOKEN), ikke i filen.
+# ===== Fyll inn her =====
+x-settings: &settings
+  API_TOKEN: "${API_TOKEN}"         # fra Portainer
+  AGENT_NAME: "xubu"
+  ROOTS: "/host:xubu"               # hele maskinen, montert på /host i containeren
+  EXCLUDE: "#snapshot"
+  ONE_FILESYSTEM: "true"            # viktig: hopper over NAS-mounts (/mnt/felles), /proc, /sys, Docker-overlay osv.
+  SCAN_AT: "04:00"
+  MIN_ENTRY_MB: "50"
+  MAX_CHILDREN: "40"
+  TOP_FILES: "200"
+  TZ: "Europe/Oslo"
+# ========================
+
+services:
+  diskmap-agent:
+    image: ghcr.io/morbus7/diskmap-agent:latest
+    container_name: diskmap-agent
+    restart: unless-stopped
+    environment: *settings
+    ports:
+      - "8787:8787"
+    volumes:
+      - /:/host:ro                  # alltid read-only: agenten kan ikke endre eller slette noe
+      - diskmap-data:/data
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [DAC_READ_SEARCH]
+    security_opt: [no-new-privileges:true]
+
+volumes:
+  diskmap-data:

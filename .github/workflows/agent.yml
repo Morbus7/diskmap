@@ -1,0 +1,33 @@
+# Bygger agent-imaget (amd64 + arm64) og legger det på ghcr.io/morbus7/diskmap-agent
+name: agent
+on:
+  push:
+    branches: [main]
+    paths: ["agent/**", ".github/workflows/agent.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Versjon fra app.py
+        run: echo "VERSION=$(grep -oP '^VERSION = "\K[^"]+' agent/app.py)" >> "$GITHUB_ENV"
+      - uses: docker/build-push-action@v6
+        with:
+          context: agent
+          platforms: linux/amd64,linux/arm64
+          push: true
+          labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          tags: |
+            ghcr.io/morbus7/diskmap-agent:latest
+            ghcr.io/morbus7/diskmap-agent:${{ env.VERSION }}

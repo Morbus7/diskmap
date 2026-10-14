@@ -1,0 +1,33 @@
+# Diskmap-agent på Synology (Container Manager → Prosjekt → Opprett, lim inn denne filen).
+# ===== Fyll inn her =====
+x-settings: &settings
+  API_TOKEN: "LIM_INN_TOKEN"        # samme token som du legger inn i Home Assistant (minst 16 tegn)
+  AGENT_NAME: "NAS"                 # navnet som vises i HA og X2
+  ROOTS: "/volume1:volume1"         # flere volumer: "/volume1:volume1,/volume2:volume2" (og mount dem under volumes)
+  EXCLUDE: "#snapshot"              # mappenavn som hoppes over, skilt med komma
+  ONE_FILESYSTEM: "true"            # ikke gå inn i andre monterte filsystemer (USB-disker, nettverksmapper)
+  SCAN_AT: "03:30"                  # daglig skanning (tom = bare når du trykker «Skann nå»)
+  MIN_ENTRY_MB: "50"                # mindre mapper/filer slås sammen til «(N mindre elementer)»
+  MAX_CHILDREN: "40"                # høyst så mange elementer per mappe
+  TOP_FILES: "200"                  # antall største filer som huskes
+  TZ: "Europe/Oslo"
+# ========================
+
+services:
+  diskmap-agent:
+    image: ghcr.io/morbus7/diskmap-agent:latest
+    container_name: diskmap-agent
+    restart: unless-stopped
+    environment: *settings
+    ports:
+      - "8787:8787"
+    volumes:
+      - /volume1:/volume1:ro        # alltid read-only: agenten kan ikke endre eller slette noe
+      - diskmap-data:/data          # bare forrige skanning lagres her
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [DAC_READ_SEARCH]      # lese mappeinnhold uansett eier, men ikke skrive
+    security_opt: [no-new-privileges:true]
+
+volumes:
+  diskmap-data:
