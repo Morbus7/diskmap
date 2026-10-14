@@ -50,6 +50,9 @@ async def test_full(hass: HomeAssistant, socket_enabled, hass_ws_client) -> None
     await ws.send_json({"id": 1, "type": "diskmap/agents"})
     msg = await ws.receive_json()
     assert msg["success"] and msg["result"][0]["name"] == "Testagent", msg
+    ents = msg["result"][0]["entities"]
+    print("entiteter:", ents)
+    assert ents["folders"]["usr/lib"] == "sensor.testagent_usr_lib" and ents["used"]["usr"] == "sensor.testagent_usr_used"
     await ws.send_json({"id": 2, "type": "diskmap/tree", "entry_id": entry_id, "path": "usr/lib", "depth": 2})
     msg = await ws.receive_json()
     assert msg["success"] and msg["result"]["node"]["n"] == "lib", msg

@@ -8,15 +8,33 @@ import voluptuous as vol
 from homeassistant.components import websocket_api
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import HomeAssistantError
+from homeassistant.helpers import entity_registry as er
 
 from .helpers import coordinator_for, loaded, tree_slice
 
 
-def _agent(c) -> dict[str, Any]:
+def _entities(hass: HomeAssistant, entry_id: str) -> dict[str, dict[str, str]]:
+    """Entitets-ID-ene til sensorene, så visninger kan hente historikk: folders = sti -> id, used = rot -> id."""
+    out: dict[str, dict[str, str]] = {"folders": {}, "used": {}}
+    prefix = entry_id + "_"
+    for e in er.async_entries_for_config_entry(er.async_get(hass), entry_id):
+        if e.domain != "sensor" or not e.unique_id.startswith(prefix) or e.disabled_by:
+            continue
+        key = e.unique_id[len(prefix):]
+        root, sep, name = key.partition("_folder_")
+        if sep:
+            out["folders"][f"{root}/{name}"] = e.entity_id
+        elif key.endswith("_used"):
+            out["used"][key[: -len("_used")]] = e.entity_id
+    return out
+
+
+def _agent(hass: HomeAssistant, c) -> dict[str, Any]:
     data = c.data or {}
     return {
         "entry_id": c.config_entry.entry_id, "name": c.config_entry.title, "available": c.last_update_success,
         "summary": data.get("summary"), "status": data.get("status") or {}, "has_tree": c.tree is not None,
+        "entities": _entities(hass, c.config_entry.entry_id),
     }
 
 
@@ -35,7 +53,7 @@ def _wrap(handler):
 @websocket_api.async_response
 @_wrap
 async def ws_agents(hass: HomeAssistant, msg: dict) -> Any:
-    return [_agent(c) for c in sorted(loaded(hass), key=lambda c: c.config_entry.title.lower())]
+    return [_agent(hass, c) for c in sorted(loaded(hass), key=lambda c: c.config_entry.title.lower())]
 
 
 @websocket_api.require_admin
@@ -82,7 +100,7 @@ async def ws_types(hass: HomeAssistant, msg: dict) -> Any:
 async def ws_scan(hass: HomeAssistant, msg: dict) -> Any:
     c = coordinator_for(hass, msg["entry_id"])
     await c.async_scan()
-    return _agent(c)
+    return _agent(hass, c)
 
 
 @callback
