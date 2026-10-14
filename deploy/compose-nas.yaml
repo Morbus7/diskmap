@@ -4,7 +4,7 @@ x-settings: &settings
   API_TOKEN: "LIM_INN_TOKEN"        # samme token som du legger inn i Home Assistant (minst 16 tegn)
   AGENT_NAME: "NAS"                 # navnet som vises i HA og X2
   ROOTS: "/volume1:volume1"         # flere volumer: "/volume1:volume1,/volume2:volume2" (og mount dem under volumes)
-  EXCLUDE: "#snapshot"              # mappenavn som hoppes over, skilt med komma
+  EXCLUDE: "#snapshot,@sharesnap"   # snapshots (Synology) telles ikke: de deler data med filene og ville gitt dobbel telling
   ONE_FILESYSTEM: "true"            # ikke gå inn i andre monterte filsystemer (USB-disker, nettverksmapper)
   SCAN_AT: "03:30"                  # daglig skanning (tom = bare når du trykker «Skann nå»)
   MIN_ENTRY_MB: "50"                # mindre mapper/filer slås sammen til «(N mindre elementer)»

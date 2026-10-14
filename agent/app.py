@@ -17,7 +17,7 @@ import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 
 
 # ---------- Oppsett fra miljøvariabler ----------
@@ -47,7 +47,7 @@ def parse_roots(text):
 
 AGENT_NAME = os.environ.get("AGENT_NAME") or socket.gethostname()
 ROOTS = parse_roots(os.environ.get("ROOTS", ""))
-EXCLUDE = {e.strip() for e in os.environ.get("EXCLUDE", "#snapshot").split(",") if e.strip()}
+EXCLUDE = {e.strip() for e in os.environ.get("EXCLUDE", "#snapshot,@sharesnap").split(",") if e.strip()}
 ONE_FILESYSTEM = env_bool("ONE_FILESYSTEM", False)
 SCAN_AT = [t.strip() for t in os.environ.get("SCAN_AT", "").split(",") if t.strip()]
 API_TOKEN = os.environ.get("API_TOKEN", "")

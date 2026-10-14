@@ -5,7 +5,7 @@ x-settings: &settings
   API_TOKEN: "${API_TOKEN}"         # fra Portainer
   AGENT_NAME: "xubu"
   ROOTS: "/host:xubu"               # hele maskinen, montert på /host i containeren
-  EXCLUDE: "#snapshot"
+  EXCLUDE: "#snapshot,@sharesnap"
   ONE_FILESYSTEM: "true"            # viktig: hopper over NAS-mounts (/mnt/felles), /proc, /sys, Docker-overlay osv.
   SCAN_AT: "04:00"
   MIN_ENTRY_MB: "50"
